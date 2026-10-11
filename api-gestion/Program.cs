@@ -58,7 +58,7 @@ namespace api_gestion
             builder.Services.AddSignalR();
 
             var origenesAutorisees = builder.Configuration.GetSection("Cors:OrigensAutorisees").Get<string[]>()
-                ?? new[] { "http://localhost:3000", "http://localhost:3001" };
+                ?? new[] { "http://localhost:3000", "http://localhost:3001", "https://gestion-nine-mu.vercel.app", "https://scan-ten-rho.vercel.app" };
 
             builder.Services.AddCors(options =>
             {
