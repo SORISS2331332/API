@@ -66,6 +66,30 @@ public class BarcodeService
     }
 
     /// <summary>
+    /// Corrige la clé de contrôle (13ème chiffre) d'un code EAN-13 si elle est invalide.
+    /// Essentiel : lors de l'impression, la librairie de rendu (ZXing) recalcule toujours
+    /// sa propre clé de contrôle à partir des 12 premiers chiffres. Si la clé stockée en
+    /// base ne correspond pas à celle que ZXing va imprimer, le code-barres scanné en
+    /// magasin ne correspondra jamais au code stocké (scan "introuvable"). Cette méthode
+    /// garantit que la valeur stockée est toujours celle qui sera réellement imprimée/scannée.
+    /// Ne touche pas aux codes non numériques ou de longueur différente (Code 128).
+    /// </summary>
+    public static string NormaliserCodeBarreEan13(string? codeBarre)
+    {
+        if (string.IsNullOrWhiteSpace(codeBarre)) return codeBarre ?? string.Empty;
+        if (codeBarre.Length != 13 || !codeBarre.All(char.IsDigit)) return codeBarre;
+
+        var chiffres = new int[12];
+        for (var i = 0; i < 12; i++)
+        {
+            chiffres[i] = codeBarre[i] - '0';
+        }
+
+        var cleCorrecte = CalculerCleControleEan13(chiffres);
+        return string.Concat(chiffres) + cleCorrecte;
+    }
+
+    /// <summary>
     /// Génère l'image PNG (bytes) d'un code-barres. Utilise le format EAN-13 si le code
     /// est numérique à 12 ou 13 chiffres (standard), sinon se rabat sur le format Code 128.
     /// </summary>

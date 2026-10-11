@@ -167,7 +167,11 @@ public class ProduitsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ProduitDto>> Creer(CreerProduitDto dto)
     {
-        if (await _db.Produits.AnyAsync(p => p.CodeBarre == dto.CodeBarre))
+        // Corrige automatiquement une éventuelle clé de contrôle EAN-13 invalide afin que
+        // le code stocké corresponde toujours à ce qui sera réellement imprimé/scanné.
+        var codeBarre = BarcodeService.NormaliserCodeBarreEan13(dto.CodeBarre);
+
+        if (await _db.Produits.AnyAsync(p => p.CodeBarre == codeBarre))
             return Conflict(new { message = "Un produit avec ce code-barres existe déjà." });
 
         if (await _db.Produits.AnyAsync(p => p.Reference == dto.Reference))
@@ -177,7 +181,7 @@ public class ProduitsController : ControllerBase
         {
             Nom = dto.Nom,
             Reference = dto.Reference,
-            CodeBarre = dto.CodeBarre,
+            CodeBarre = codeBarre,
             Categorie = dto.Categorie,
             QuantiteStock = dto.QuantiteStock,
             SeuilAlerte = dto.SeuilAlerte,
@@ -214,7 +218,9 @@ public class ProduitsController : ControllerBase
         var produit = await _db.Produits.FindAsync(id);
         if (produit == null) return NotFound();
 
-        if (await _db.Produits.AnyAsync(p => p.Id != id && p.CodeBarre == dto.CodeBarre))
+        var codeBarre = BarcodeService.NormaliserCodeBarreEan13(dto.CodeBarre);
+
+        if (await _db.Produits.AnyAsync(p => p.Id != id && p.CodeBarre == codeBarre))
             return Conflict(new { message = "Un autre produit utilise déjà ce code-barres." });
 
         if (await _db.Produits.AnyAsync(p => p.Id != id && p.Reference == dto.Reference))
@@ -222,7 +228,7 @@ public class ProduitsController : ControllerBase
 
         produit.Nom = dto.Nom;
         produit.Reference = dto.Reference;
-        produit.CodeBarre = dto.CodeBarre;
+        produit.CodeBarre = codeBarre;
         produit.Categorie = dto.Categorie;
         produit.SeuilAlerte = dto.SeuilAlerte;
         produit.PrixUnitaire = dto.PrixUnitaire;
