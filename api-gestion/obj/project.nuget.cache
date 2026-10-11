@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "zkMINt2GkOU=",
+  "dgSpecHash": "K0cKt4MIPV4=",
   "success": true,
   "projectFilePath": "C:\\projets\\2026\\Clients\\Alex\\APP\\API\\api-gestion\\api-gestion.csproj",
   "expectedPackageFiles": [
@@ -36,6 +36,7 @@
     "C:\\Users\\Utilisateur\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\10.0.3\\npgsql.entityframeworkcore.postgresql.10.0.3.nupkg.sha512",
     "C:\\Users\\Utilisateur\\.nuget\\packages\\questpdf\\2026.9.1\\questpdf.2026.9.1.nupkg.sha512",
     "C:\\Users\\Utilisateur\\.nuget\\packages\\skiasharp\\4.151.1\\skiasharp.4.151.1.nupkg.sha512",
+    "C:\\Users\\Utilisateur\\.nuget\\packages\\skiasharp.nativeassets.linux\\4.151.1\\skiasharp.nativeassets.linux.4.151.1.nupkg.sha512",
     "C:\\Users\\Utilisateur\\.nuget\\packages\\skiasharp.nativeassets.macos\\4.151.1\\skiasharp.nativeassets.macos.4.151.1.nupkg.sha512",
     "C:\\Users\\Utilisateur\\.nuget\\packages\\skiasharp.nativeassets.win32\\4.151.1\\skiasharp.nativeassets.win32.4.151.1.nupkg.sha512",
     "C:\\Users\\Utilisateur\\.nuget\\packages\\swashbuckle.aspnetcore\\6.6.2\\swashbuckle.aspnetcore.6.6.2.nupkg.sha512",

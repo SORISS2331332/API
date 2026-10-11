@@ -5,12 +5,14 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Restauration des dépendances (mise en cache des layers Docker)
+# -r linux-x64 : nécessaire pour que les bibliothèques natives (SkiaSharp pour
+# la génération des codes-barres/PDF) soient bien restaurées puis publiées.
 COPY api-gestion.csproj ./
-RUN dotnet restore "api-gestion.csproj"
+RUN dotnet restore "api-gestion.csproj" -r linux-x64
 
 # Copie du reste du code source et publication en mode Release
 COPY . .
-RUN dotnet publish "api-gestion.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "api-gestion.csproj" -c Release -o /app/publish -r linux-x64 --self-contained false /p:UseAppHost=false
 
 # ================================
 # Étape 2 : Image d'exécution
