@@ -3,6 +3,7 @@ using api_gestion.Data;
 using api_gestion.Hubs;
 using api_gestion.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -118,6 +119,16 @@ namespace api_gestion
             }
 
             // --- Pipeline HTTP ---
+            // Le TLS est terminé par le proxy d'hébergement (Render, Vercel, ...),
+            // on fait confiance aux en-têtes X-Forwarded-* pour connaître le vrai schéma/IP du client.
+            var optionsEntetesTransferes = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            };
+            optionsEntetesTransferes.KnownIPNetworks.Clear();
+            optionsEntetesTransferes.KnownProxies.Clear();
+            app.UseForwardedHeaders(optionsEntetesTransferes);
+
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
