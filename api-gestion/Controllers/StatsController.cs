@@ -27,12 +27,13 @@ public class StatsController : ControllerBase
 
         var produits = await _db.Produits.ToListAsync();
 
+        // Les annulations de scan (+1) sont déduites des sorties (-1)
         var sortiesAujourdHui = await _db.Mouvements
-            .Where(m => m.Type == TypeMouvement.SortieScan && m.DateHeure >= aujourdHui)
+            .Where(m => (m.Type == TypeMouvement.SortieScan || m.Type == TypeMouvement.AnnulationScan) && m.DateHeure >= aujourdHui)
             .SumAsync(m => (int?)-m.Quantite) ?? 0;
 
         var sortiesSemaine = await _db.Mouvements
-            .Where(m => m.Type == TypeMouvement.SortieScan && m.DateHeure >= debutSemaine)
+            .Where(m => (m.Type == TypeMouvement.SortieScan || m.Type == TypeMouvement.AnnulationScan) && m.DateHeure >= debutSemaine)
             .SumAsync(m => (int?)-m.Quantite) ?? 0;
 
         var mouvementsAujourdHui = await _db.Mouvements.CountAsync(m => m.DateHeure >= aujourdHui);
@@ -62,7 +63,7 @@ public class StatsController : ControllerBase
             .Where(m => m.DateHeure >= debut && m.DateHeure < fin)
             .ToListAsync();
 
-        var sorties = mouvements.Where(m => m.Type == TypeMouvement.SortieScan).ToList();
+        var sorties = mouvements.Where(m => m.Type == TypeMouvement.SortieScan || m.Type == TypeMouvement.AnnulationScan).ToList();
         var entrees = mouvements.Where(m => m.Type == TypeMouvement.Entree || (m.Type == TypeMouvement.AjustementManuel && m.Quantite > 0)).ToList();
         var ajustements = mouvements.Where(m => m.Type == TypeMouvement.AjustementManuel).ToList();
 

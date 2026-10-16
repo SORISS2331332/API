@@ -9,7 +9,8 @@ public enum TypeMouvement
     AjustementManuel = 1,
     Entree = 2,
     CreationInitiale = 3,
-    Correction = 4
+    Correction = 4,
+    AnnulationScan = 5
 }
 
 public class MouvementStock
