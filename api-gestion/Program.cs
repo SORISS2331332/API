@@ -148,11 +148,12 @@ namespace api_gestion
             app.MapControllers();
             app.MapHub<StockHub>("/hubs/stock");
 
-            app.MapGet("/", () => Results.Ok(new { statut = "ok", message = "API Gestion & Suivi de Stock en ligne" }));
+            app.MapMethods("/", new[] { "GET", "HEAD" }, () => Results.Ok(new { statut = "ok", message = "API Gestion & Suivi de Stock en ligne" }));
 
             // Endpoint léger (sans auth, sans accès BD) à pinger régulièrement
             // (ex. UptimeRobot, cron-job.org) pour éviter la mise en veille de Render.
-            app.MapGet("/health", () => Results.Ok(new { statut = "ok", heure = DateTime.UtcNow }));
+            // HEAD est accepté car les moniteurs (UptimeRobot) l'utilisent par défaut.
+            app.MapMethods("/health", new[] { "GET", "HEAD" }, () => Results.Ok(new { statut = "ok", heure = DateTime.UtcNow }));
 
             app.Run();
         }
